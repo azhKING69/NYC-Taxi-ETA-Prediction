@@ -1,0 +1,40 @@
+name: CD Deployment Pipeline
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'model_artifact/**'
+      - 'serving/**'
+      - 'Dockerfile.serve'
+      - 'requirements-serve.txt'
+  workflow_dispatch:
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker Serving Image
+        run: |
+          docker build -f Dockerfile.serve -t nyc-taxi-duration-predictor:${{ github.sha }} .
+
+      - name: Smoke Test Serving Image
+        run: |
+          docker run -d -p 8000:8000 --name test-serving nyc-taxi-duration-predictor:${{ github.sha }}
+          sleep 5
+          curl --fail http://localhost:8000/health || exit 1
+          docker stop test-serving
+
+      - name: Trigger Render Deploy Webhook
+        if: env.RENDER_DEPLOY_HOOK_URL != ''
+        env:
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          echo "Dispatching deploy trigger to Render.com..."
+          curl -X POST "$RENDER_DEPLOY_HOOK_URL"

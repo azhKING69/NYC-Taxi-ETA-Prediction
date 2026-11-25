@@ -1,0 +1,23 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.DS_Store
+
+# MLflow local tracking store + artifacts (would be a remote server/S3 in production)
+mlflow.db
+mlruns/
+models/
+
+# Data layers and raw parquet files (versioned via DVC / Cloud storage, not committed to git)
+*.parquet
+data/
+data/bronze/
+data/silver/
+data/gold/
+data/raw_source/
+
+# Env
+.venv/
+venv/
+*.env
+uvicorn.log

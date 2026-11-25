@@ -1,0 +1,17 @@
+{
+  "model_name": "nyc-taxi-duration-predictor",
+  "run_id": "3899535a90854401bf59a5f03d16c500",
+  "features": [
+    "PULocationID",
+    "DOLocationID",
+    "trip_distance",
+    "passenger_count",
+    "pickup_hour",
+    "pickup_day_of_week",
+    "is_weekend",
+    "is_rush_hour",
+    "is_airport_trip"
+  ],
+  "exported_at_utc": "2026-11-25T14:49:40.215388+00:00",
+  "framework": "lightgbm"
+}

@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    .phase-badge {
+      font-size: 0.65rem;
+      padding: 2px 8px;
+      border-radius: 9999px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .connector {
+      width: 2px;
+      background: var(--border);
+      margin: 0 auto;
+    }
+    .arrow-down {
+      width: 0; height: 0;
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-top: 10px solid var(--border);
+      margin: 0 auto;
+    }
+    .step-card {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 20px;
+      background: var(--card);
+      position: relative;
+    }
+    .step-card.active {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 1px #3b82f6;
+    }
+    .tool-tag {
+      font-size: 0.7rem;
+      padding: 2px 8px;
+      border-radius: 6px;
+      background: var(--content, var(--card));
+      border: 1px solid var(--border);
+      color: var(--muted-foreground);
+      font-weight: 500;
+    }
+    .section-divider {
+      border-top: 2px dashed var(--border);
+      margin: 32px 0;
+      position: relative;
+    }
+    .section-divider span {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--background, var(--card));
+      padding: 2px 16px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted-foreground);
+    }
+    .tab-btn {
+      padding: 8px 20px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted-foreground);
+      transition: all 0.2s;
+    }
+    .tab-btn.active {
+      background: #3b82f6;
+      color: white;
+      border-color: #3b82f6;
+    }
+    .flow-number {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.8rem;
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body class="bg-[var(--background)] text-[var(--foreground)] antialiased p-4">
+  
+  <!-- Header -->
+  <div class="text-center mb-6">
+    <h1 class="text-2xl font-bold mb-2">NYC Taxi Trip Duration — Complete MLOps Pipeline</h1>
+    <p class="text-[var(--muted-foreground)] text-sm max-w-2xl mx-auto">Setup A: Train locally with MLflow tracking. GitHub Actions runs tests + automates deployment after you manually approve.</p>
+  </div>
+
+  <!-- Tab switcher -->
+  <div class="flex justify-center gap-3 mb-8">
+    <button class="tab-btn active" onclick="showTab('overview')">Full Overview</button>
+    <button class="tab-btn" onclick="showTab('dev')">Development Loop</button>
+    <button class="tab-btn" onclick="showTab('deploy')">Deployment Flow</button>
+  </div>
+
+  <!-- ============ OVERVIEW TAB ============ -->
+  <div id="tab-overview" class="max-w-3xl mx-auto">
+    
+    <!-- PHASE 1: YOUR LAPTOP -->
+    <div class="mb-2">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="phase-badge" style="background: #dbeafe; color: #1d4ed8;">💻 Your Laptop</span>
+        <span class="text-[var(--muted-foreground)] text-xs">— where you develop, train, and experiment</span>
+      </div>
+
+      <!-- Step 1 -->
+      <div class="step-card mb-1">
+        <div class="flex items-start gap-3">
+          <div class="flow-number" style="background: #dbeafe; color: #1d4ed8;">1</div>
+          <div class="flex-1">
+            <div class="flex items-center gap-2 mb-1">
+              <h3 class="font-bold text-sm">Data Ingestion</h3>
+              <span class="tool-tag">wget / urllib</span>
+            </div>
+            <p class="text-[var(--muted-foreground)] text-xs leading-relaxed">Download latest month's Parquet file from NYC TLC website. Save to <code class="text-xs">data/bronze/</code> untouched. New file appears every month at a predictable URL — no API key needed.</p>
+          </div>
+        </div>
+      </div>
+      <div class="connector" style="height: 12px;"></div>
+      <div class="arrow-down"></div>
+
+      <!-- Step 2 -->
+      <div class="step-card mb-1">
+        <div class="flex items-start gap-3">
+          <div class="flow-number" style="background: #dbeafe; color: #1d4ed8;">2</div>
+          <div class="flex-1">
+            <div class="flex items-center gap-2 mb-1">
+              <h3 class="font-bold text-sm">Data Validation</h3>
+              <span class="tool-tag">Pandera</span>
+            </div>
+            <p class="text-[var(--muted-foreground)] text-xs leading-relaxed">Schema checks: are columns present and typed correctly? Range checks: no negative fares, no trips to the moon (max distance 307K miles in your data!), no dates from 2008. If validation fails → pipeline stops. Never train on bad data.</p>
+          </div>
+        </div>
+      </div>
+      <div class="connector" style="height: 12px;"></div>
+      <div class="arrow-down"></div>
+
+      <!-- Step 3 -->
+      <div class="step-card mb-1">
+        <div class="flex items-start gap-3">
+          <div class="flow-number" style="background: #dbeafe; color: #1d4ed8;">3</div>
+          <div class="flex-1">
+            <div class="flex items-center gap-2 mb-1">
+              <h3 class="font-bold text-sm">Data Cleaning</h3>
+              <span class="tool-tag">pandas</span>
+            </div>
+            <p class="text-[var(--muted-foreground)] text-xs leading-relaxed">Filter garbage rows (negative fares, 0-second trips, 24hr+ trips). Fill nulls in passenger_count. Compute target: <code class="text-xs">trip_duration_minutes = (dropoff - pickup) / 60</code>. Output → <code class="text-xs">data/silver/</code></p>
+          </div>
+        </div>
+      </div>
+      <div class="connector" style="height: 12px;"></div>
+      <div class="arrow-down"></div>
+
+      <!-- Step 4 -->
+      <div class="step-card mb-1">
+        <div class="flex items-start gap-3">
+          <div class="flow-number" style="background: #dbeafe; color: #1d4ed8;">4</div>
+          <div class="flex-1">
+            <div class="flex items-center gap-2 mb-1">
+              <h3 class="font-bold text-sm">Feature Engineering + Split</h3>
+              <span class="tool-tag">pandas</span>
+              <span class="tool-tag">DVC</span>
+            </div>
+            <p class="text-[var(--muted-foreground)] text-xs leading-relaxed">Extract: hour, day_of_week, is_weekend, is_rush_hour, is_airport. Keep: PULocationID, DOLocationID, trip_distance. Split into train (90%) + frozen test (10%). Version with DVC (backed by Google Drive). Output → <code class="text-xs">data/gold/</code></p>
+          </div>
+        </div>
+      </div>
+      <div class="connector" style="height: 12px;"></div>
+      <div class="arrow-down"></div>
+
+      <!-- Step 5 -->
+      <div class="step-card mb-1" style="border-color: #f59e0b;">
+        <div class="flex items-start gap-3">
+          <div class="flow-number" style="background: #fef3c7; color: #b45309;">5</div>
+          <div class="flex-1">
+            <div class="flex items-center gap-2 mb-1">
+              <h3 class="font-bold text-sm">Training (Config Sweep)</h3>
+              <span class="tool-tag">LightGBM</span>
+              <span class="tool-tag">MLflow Tracking</span>
+            </div>
+            <p class="text-[var(--muted-foreground)] text-xs leading-relaxed">Train 3-5 LightGBM configs with different hyperparameters. Each run logs params, metrics (RMSE, MAE, R²), and model artifact to <strong>local MLflow</strong> (SQLite). All runs visible at <code class="text-xs">localhost:5000</code>.</p>
+          </div>
+        </div>
+      </div>
+      <div class="connector" style="height: 12px;"></div>
+      <div class="arrow-down"></div>
+
+      <!-- Step 6 -->
+      <div class="step-card mb-1" style="border-color: #f59e0b;">
+        <div class="flex items-start gap-3">
+          <div class="flow-number" style="background: #fef3c7; color: #b45309;">6</div>
+          <div class="flex-1">
+            <div class="flex items-center gap-2 mb-1">
+              <h3 class="font-bold text-sm">👁️ YOU: Compare & Pick Winner</h3>
+              <span class="tool-tag">MLflow UI</span>
+            </div>
+            <p class="text-[var(--muted-foreground)] text-xs leading-relaxed">Open <code class="text-xs">mlflow ui</code> → <code class="text-xs">localhost:5000</code>. Visually compare all training runs. Sort by val_rmse. Pick the best one. This is the <strong>manual verification</strong> step — you decide which model is good enough.</p>
+          </div>
+        </div>
+      </div>
+      <div class="connector" style="height: 12px;"></div>
+      <div class="arrow-down"></div>
+
+      <!-- Step 7 -->
+      <div class="step-card mb-1">
+        <div class="flex items-start gap-3">
+          <div class="flow-number" style="background: #dbeafe; color: #1d4ed8;">7</div>
+          <div class="flex-1">
+            <div class="flex items-center gap-2 mb-1">
+              <h3 class="font-bold text-sm">Evaluation Gate</h3>
+              <span class="tool-tag">evaluate.py</span>
+            </div>
+            <p class="text-[var(--muted-foreground)] text-xs leading-relaxed">Run best model against frozen test set. If RMSE &lt; 5.0 minutes → PASS. If RMSE ≥ 5.0 → FAIL, model is rejected. This prevents bad models from ever being deployed.</p>
+          </div>
+        </div>
+      </div>
+      <div class="connector" style="height: 12px;"></div>
+      <div class="arrow-down"></div>
+
+      <!-- Step 8 -->
+      <div class="step-card mb-1">
+        <div class="flex items-start gap-3">
+          <div class="flow-number" style="background: #dbeafe; color: #1d4ed8;">8</div>
+          <div class="flex-1">
+            <div class="flex items-center gap-2 mb-1">
+              <h3 class="font-bold text-sm">Register Model</h3>
+              <span class="tool-tag">MLflow Registry</span>
+            </div>
+            <p class="text-[var(--muted-foreground)] text-xs leading-relaxed">Register the passing model in MLflow: <code class="text-xs">taxi-duration-predictor v1 → Production</code>. Export model artifact to <code class="text-xs">model_artifact/</code> folder for Docker packaging.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DIVIDER -->
+    <div class="section-divider"><span>⬇ YOU: git push (triggers automation)</span></div>
+
+    <!-- PHASE 2: GITHUB ACTIONS -->
+    <div class="mb-2">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="phase-badge" style="background: #f3e8ff; color: #7c3aed;">⚙️ GitHub Actions</span>
+        <span class="text-[var(--muted-foreground)] text-xs">— automated CI + deployment (runs on GitHub's free servers)</span>
+      </div>
+
+      <!-- CI Step -->
+      <div class="step-card mb-1" style="border-color: #8b5cf6;">
+        <div class="flex items-start gap-3">
+          <div class="flow-number" style="background: #f3e8ff; color: #7c3aed;">9</div>
+          <div class="flex-1">
+            <div class="flex items-center gap-2 mb-1">
+              <h3 class="font-bold text-sm">CI: Run Tests</h3>
+              <span class="tool-tag">pytest</span>
+              <span class="tool-tag">ci.yml</span>
+            </div>
+            <p class="text-[var(--muted-foreground)] text-xs leading-relaxed">On every <code class="text-xs">git push</code>: install deps → run <code class="text-xs">pytest tests/</code> (unit tests for cleaning, validation, feature engineering). Catches bugs before they reach production. <strong>No training happens here.</strong></p>
+          </div>
+        </div>
+      </div>
+      <div class="connector" style="height: 12px;"></div>
+      <div class="arrow-down"></div>
+
+      <!-- Deploy Step -->
+      <div class="step-card mb-1" style="border-color: #8b5cf6;">
+        <div class="flex items-start gap-3">
+          <div class="flow-number" style="background: #f3e8ff; color: #7c3aed;">10</div>
+          <div class="flex-1">
+            <div class="flex items-center gap-2 mb-1">
+              <h3 class="font-bold text-sm">CD: Build & Push Docker Image</h3>
+              <span class="tool-tag">Docker</span>
+              <span class="tool-tag">deploy.yml</span>
+            </div>
+            <p class="text-[var(--muted-foreground)] text-xs leading-relaxed">If tests pass AND you pushed to <code class="text-xs">main</code> branch: build <code class="text-xs">Dockerfile.serve</code> (with model baked in) → push image to Docker Hub → trigger Render redeploy via webhook. <strong>Fully automated after your git push.</strong></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DIVIDER -->
+    <div class="section-divider"><span>⬇ Automatic deploy</span></div>
+
+    <!-- PHASE 3: RENDER -->
+    <div class="mb-2">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="phase-badge" style="background: #dcfce7; color: #16a34a;">🌐 Render.com (Free Tier)</span>
+        <span class="text-[var(--muted-foreground)] text-xs">— always-on prediction server, accessible to anyone on the internet</span>
+      </div>
+
+      <!-- Serving Step -->
+      <div class="step-card mb-1" style="border-color: #22c55e;">
+        <div class="flex items-start gap-3">
+          <div class="flow-number" style="background: #dcfce7; color: #16a34a;">11</div>
+          <div class="flex-1">
+            <div class="flex items-center gap-2 mb-1">
+              <h3 class="font-bold text-sm">Live API Server (24/7)</h3>
+              <span class="tool-tag">FastAPI</span>
+              <span class="tool-tag">uvicorn</span>
+            </div>
+            <p class="text-[var(--muted-foreground)] text-xs leading-relaxed">Runs your Docker image. Serves predictions at <code class="text-xs">https://taxi-predictor.onrender.com/predict</code>. Send pickup/dropoff zones + time → get predicted trip duration in minutes. <strong>This URL goes on your resume.</strong></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Summary boxes -->
+    <div class="grid grid-cols-3 gap-3 mt-8">
+      <div class="step-card text-center">
+        <div class="text-2xl mb-1">💻</div>
+        <div class="font-bold text-xs mb-1">Your Laptop</div>
+        <div class="text-[var(--muted-foreground)] text-xs">Steps 1-8<br/>Data + Training + MLflow</div>
+      </div>
+      <div class="step-card text-center">
+        <div class="text-2xl mb-1">⚙️</div>
+        <div class="font-bold text-xs mb-1">GitHub Actions</div>
+        <div class="text-[var(--muted-foreground)] text-xs">Steps 9-10<br/>Tests + Docker + Deploy</div>
+      </div>
+      <div class="step-card text-center">
+        <div class="text-2xl mb-1">🌐</div>
+        <div class="font-bold text-xs mb-1">Render.com</div>
+        <div class="text-[var(--muted-foreground)] text-xs">Step 11<br/>Live predictions 24/7</div>
+      </div>
+    </div>
+
+    <!-- Cost -->
+    <div class="step-card mt-4 text-center" style="border-color: #22c55e;">
+      <p class="font-bold text-sm" style="color: #16a34a;">💰 Total monthly cost: $0</p>
+      <p class="text-[var(--muted-foreground)] text-xs">Google Drive (15GB free) · GitHub Actions (2000 min free) · Docker Hub (free) · Render (free tier)</p>
+    </div>
+  </div>
+
+  <!-- ============ DEV LOOP TAB ============ -->
+  <div id="tab-dev" class="max-w-3xl mx-auto hidden">
+    <div class="step-card mb-6">
+      <h2 class="font-bold text-lg mb-3">🔄 The Monthly Development Loop</h2>
+      <p class="text-[var(--muted-foreground)] text-sm mb-4">This is what you do every month when new taxi data drops. Everything runs on your laptop.</p>
+      
+      <div class="space-y-3">
+        <div class="flex gap-3 items-start">
+          <div class="flow-number" style="background: #dbeafe; color: #1d4ed8; min-width: 28px;">1</div>
+          <div>
+            <p class="font-semibold text-sm">Download new month's data</p>
+            <code class="text-xs text-[var(--muted-foreground)]">python src/ingest.py --year 2026 --month 6</code>
+          </div>
+        </div>
+        <div class="flex gap-3 items-start">
+          <div class="flow-number" style="background: #dbeafe; color: #1d4ed8; min-width: 28px;">2</div>
+          <div>
+            <p class="font-semibold text-sm">Validate the new data</p>
+            <code class="text-xs text-[var(--muted-foreground)]">python src/validate.py</code>
+            <p class="text-[var(--muted-foreground)] text-xs mt-1">If this fails, STOP. Investigate why the data looks different this month.</p>
+          </div>
+        </div>
+        <div class="flex gap-3 items-start">
+          <div class="flow-number" style="background: #dbeafe; color: #1d4ed8; min-width: 28px;">3</div>
+          <div>
+            <p class="font-semibold text-sm">Clean + Engineer features + Split</p>
+            <code class="text-xs text-[var(--muted-foreground)]">python src/clean.py && python src/features.py && python src/split.py</code>
+          </div>
+        </div>
+        <div class="flex gap-3 items-start">
+          <div class="flow-number" style="background: #fef3c7; color: #b45309; min-width: 28px;">4</div>
+          <div>
+            <p class="font-semibold text-sm">Train multiple configs</p>
+            <code class="text-xs text-[var(--muted-foreground)]">python src/train.py</code>
+            <p class="text-[var(--muted-foreground)] text-xs mt-1">Sweeps 3-5 LightGBM hyperparameter configs. Each logged to MLflow.</p>
+          </div>
+        </div>
+        <div class="flex gap-3 items-start">
+          <div class="flow-number" style="background: #fef3c7; color: #b45309; min-width: 28px;">5</div>
+          <div>
+            <p class="font-semibold text-sm">👁️ Review in MLflow UI</p>
+            <code class="text-xs text-[var(--muted-foreground)]">mlflow ui → open localhost:5000</code>
+            <p class="text-[var(--muted-foreground)] text-xs mt-1">Compare runs. Sort by RMSE. Pick the winner. This is YOUR judgment call.</p>
+          </div>
+        </div>
+        <div class="flex gap-3 items-start">
+          <div class="flow-number" style="background: #dbeafe; color: #1d4ed8; min-width: 28px;">6</div>
+          <div>
+            <p class="font-semibold text-sm">Evaluate + Register</p>
+            <code class="text-xs text-[var(--muted-foreground)]">python src/evaluate.py --run-id &lt;best&gt; && python src/register.py --run-id &lt;best&gt;</code>
+            <p class="text-[var(--muted-foreground)] text-xs mt-1">Gate check on frozen test set. If passes → register in MLflow as Production.</p>
+          </div>
+        </div>
+        <div class="flex gap-3 items-start">
+          <div class="flow-number" style="background: #dcfce7; color: #16a34a; min-width: 28px;">7</div>
+          <div>
+            <p class="font-semibold text-sm">Deploy: git push → automated from here</p>
+            <code class="text-xs text-[var(--muted-foreground)]">git add . && git commit -m "retrain on June 2026 data" && git push</code>
+            <p class="text-[var(--muted-foreground)] text-xs mt-1">GitHub Actions runs tests → builds Docker image → pushes to Render. Done!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Where things are stored -->
+    <div class="step-card">
+      <h3 class="font-bold text-sm mb-3">📁 Where Everything Lives</h3>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <p class="font-semibold text-xs mb-1">On Your Laptop</p>
+          <ul class="text-[var(--muted-foreground)] text-xs space-y-1">
+            <li>📂 <code>data/bronze/</code> — raw Parquet files</li>
+            <li>📂 <code>data/silver/</code> — cleaned data</li>
+            <li>📂 <code>data/gold/</code> — train + test splits</li>
+            <li>📂 <code>models/mlruns/</code> — model artifacts</li>
+            <li>📄 <code>mlflow.db</code> — experiment tracking DB</li>
+          </ul>
+        </div>
+        <div>
+          <p class="font-semibold text-xs mb-1">In the Cloud (Free)</p>
+          <ul class="text-[var(--muted-foreground)] text-xs space-y-1">
+            <li>☁️ Google Drive — DVC data backups</li>
+            <li>🐙 GitHub — all source code</li>
+            <li>🐳 Docker Hub — serving image</li>
+            <li>🌐 Render.com — live API server</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ DEPLOY TAB ============ -->
+  <div id="tab-deploy" class="max-w-3xl mx-auto hidden">
+    <div class="step-card mb-6">
+      <h2 class="font-bold text-lg mb-3">🚀 The Deployment Flow (What Happens After git push)</h2>
+      <p class="text-[var(--muted-foreground)] text-sm mb-4">After you train locally, verify in MLflow, and push to GitHub — everything below is <strong>fully automatic</strong>.</p>
+    </div>
+
+    <div class="flex flex-col items-center">
+      <!-- Step A -->
+      <div class="step-card w-full mb-1" style="border-color: #8b5cf6;">
+        <div class="flex items-start gap-3">
+          <div class="flow-number" style="background: #f3e8ff; color: #7c3aed;">A</div>
+          <div>
+            <p class="font-bold text-sm">You push to GitHub</p>
+            <p class="text-[var(--muted-foreground)] text-xs">Your commit includes: updated source code + the exported model artifact in <code>model_artifact/</code></p>
+          </div>
+        </div>
+      </div>
+      <div class="connector" style="height: 16px;"></div>
+      <div class="arrow-down"></div>
+
+      <!-- Step B -->
+      <div class="step-card w-full mb-1" style="border-color: #8b5cf6;">
+        <div class="flex items-start gap-3">
+          <div class="flow-number" style="background: #f3e8ff; color: #7c3aed;">B</div>
+          <div>
+            <p class="font-bold text-sm">GitHub Actions: ci.yml triggers</p>
+            <p class="text-[var(--muted-foreground)] text-xs">Installs dependencies → runs <code>pytest tests/</code> → validates data schemas. If any test fails → deployment is blocked.</p>
+          </div>
+        </div>
+      </div>
+      <div class="connector" style="height: 16px;"></div>
+      <div class="arrow-down"></div>
+
+      <!-- Step C -->
+      <div class="step-card w-full mb-1" style="border-color: #8b5cf6;">
+        <div class="flex items-start gap-3">
+          <div class="flow-number" style="background: #f3e8ff; color: #7c3aed;">C</div>
+          <div>
+            <p class="font-bold text-sm">GitHub Actions: deploy.yml triggers</p>
+            <p class="text-[var(--muted-foreground)] text-xs">Builds <code>Dockerfile.serve</code> (FastAPI + model baked in) → pushes image to Docker Hub → calls Render's deploy webhook.</p>
+          </div>
+        </div>
+      </div>
+      <div class="connector" style="height: 16px;"></div>
+      <div class="arrow-down"></div>
+
+      <!-- Step D -->
+      <div class="step-card w-full mb-1" style="border-color: #22c55e;">
+        <div class="flex items-start gap-3">
+          <div class="flow-number" style="background: #dcfce7; color: #16a34a;">D</div>
+          <div>
+            <p class="font-bold text-sm">Render pulls new image & restarts</p>
+            <p class="text-[var(--muted-foreground)] text-xs">Old container shuts down → new container with new model starts up → <code>https://taxi-predictor.onrender.com/predict</code> now serves the updated model. Zero downtime if configured correctly.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Timeline -->
+    <div class="step-card mt-6">
+      <h3 class="font-bold text-sm mb-3">⏱️ How Long Does This Take?</h3>
+      <div class="space-y-2">
+        <div class="flex items-center gap-3">
+          <span class="text-xs font-mono text-[var(--muted-foreground)] w-20">0:00</span>
+          <div class="flex-1 h-2 rounded" style="background: #8b5cf6; width: 10%;"></div>
+          <span class="text-xs">You: <code>git push</code></span>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="text-xs font-mono text-[var(--muted-foreground)] w-20">0:00-2:00</span>
+          <div class="flex-1 h-2 rounded" style="background: #a78bfa; width: 30%;"></div>
+          <span class="text-xs">GitHub: runs tests</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="text-xs font-mono text-[var(--muted-foreground)] w-20">2:00-5:00</span>
+          <div class="flex-1 h-2 rounded" style="background: #c4b5fd; width: 40%;"></div>
+          <span class="text-xs">GitHub: builds Docker image</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="text-xs font-mono text-[var(--muted-foreground)] w-20">5:00-7:00</span>
+          <div class="flex-1 h-2 rounded" style="background: #22c55e; width: 25%;"></div>
+          <span class="text-xs">Render: pulls & starts new container</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="text-xs font-mono text-[var(--muted-foreground)] w-20">~7 min</span>
+          <span class="text-xs">✅ New model is live at your public URL</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showTab(tab) {
+      document.querySelectorAll('[id^="tab-"]').forEach(el => el.classList.add('hidden'));
+      document.getElementById('tab-' + tab).classList.remove('hidden');
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+  </script>
+
+</body>
+</html>
