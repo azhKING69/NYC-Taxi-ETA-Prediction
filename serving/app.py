@@ -5,7 +5,7 @@ import json
 import joblib
 import pandas as pd
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 from pydantic import BaseModel, Field
 
 # Model paths
@@ -77,6 +77,11 @@ def transform_request_to_features(req: TripPredictionRequest) -> dict:
         "is_rush_hour": int(is_rush),
         "is_airport_trip": int(is_airport),
     }
+
+
+@app.get("/", include_in_schema=False)
+def root():
+    return RedirectResponse(url="/dashboard")
 
 
 @app.get("/health")

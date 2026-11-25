@@ -51,3 +51,10 @@ def test_dashboard_endpoint():
         response = client.get("/dashboard")
         assert response.status_code == 200
         assert "NYC Taxi MLOps Command Center" in response.text
+
+
+def test_root_redirect():
+    with TestClient(app) as client:
+        response = client.get("/", follow_redirects=False)
+        assert response.status_code in [302, 307]
+        assert response.headers["location"] == "/dashboard"
